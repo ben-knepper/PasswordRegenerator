@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="PasswordRegenerator.Views.GeneratorOptionsPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Size" />
+            <Picker />
+            <Label Text="Lowercase" />
+            <Picker />
+            <Label Text="Uppercase" />
+            <Picker />
+            <Label Text="Numbers" />
+            <Picker />
+            <Label Text="Symbols" />
+            <Picker />
+            <Picker />
+            <Button Text="Save" Command="{Binding SaveCommand}"
+                    Clicked="SaveButton_Clicked" />
+            <Button Text="Cancel" Command="{Binding CancelCommand}"
+                    Clicked="CancelButton_Clicked" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
