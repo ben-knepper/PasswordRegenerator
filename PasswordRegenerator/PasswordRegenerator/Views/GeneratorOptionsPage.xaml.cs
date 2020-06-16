@@ -14,13 +14,13 @@ namespace PasswordRegenerator.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class GeneratorOptionsPage : ContentPage
     {
-        GeneratorOptionsViewModel viewModel;
+        GeneratorOptionsViewModel _viewModel;
 
         public GeneratorOptionsPage(GeneratorViewModel parentViewModel)
         {
             InitializeComponent();
 
-            BindingContext = viewModel = new GeneratorOptionsViewModel(parentViewModel);
+            BindingContext = _viewModel = new GeneratorOptionsViewModel(parentViewModel);
         }
 
         private async void SaveButton_Clicked(object sender, EventArgs e)

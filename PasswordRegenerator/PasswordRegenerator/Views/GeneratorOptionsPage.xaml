@@ -7,17 +7,15 @@
              x:Class="PasswordRegenerator.Views.GeneratorOptionsPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Size" />
-            <Picker />
-            <Label Text="Lowercase" />
-            <Picker />
-            <Label Text="Uppercase" />
-            <Picker />
-            <Label Text="Numbers" />
-            <Picker />
-            <Label Text="Symbols" />
-            <Picker />
-            <Picker />
+            <Picker x:Name="LengthPicker" Title="Length"
+                    ItemsSource="{Binding LengthOptions}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding SelectedLength}" />
+            <Picker Title="Lowercase" />
+            <Picker Title="Uppercase" />
+            <Picker Title="Numbers" />
+            <Picker Title="Symbols" />
+            <Picker Title="Symbol Type" />
             <Button Text="Save" Command="{Binding SaveCommand}"
                     Clicked="SaveButton_Clicked" />
             <Button Text="Cancel" Command="{Binding CancelCommand}"
