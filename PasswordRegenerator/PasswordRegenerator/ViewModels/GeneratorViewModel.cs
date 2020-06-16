@@ -51,7 +51,10 @@ namespace PasswordRegenerator.ViewModels
             ParameterSet = new ParameterSet()
             {
                 Length = 10,
-                UnitSets = new ObservableCollection<UnitSet>(unitSets),
+                LowercaseBounds = Bounds.AtLeastOne,
+                UppercaseBounds = Bounds.AtLeastOne,
+                NumberBounds = Bounds.AtLeastOne,
+                SymbolBounds = Bounds.AtLeastOne,
                 IsLegacy = true,
             };
         }
@@ -60,9 +63,16 @@ namespace PasswordRegenerator.ViewModels
         {
             IsBusy = true;
 
+            var unitSets = new List<UnitSet>()
+            {
+                new UnitSet(UnitSet.LowercaseLetters, ParameterSet.LowercaseBounds),
+                new UnitSet(UnitSet.UppercaseLetters, ParameterSet.UppercaseBounds),
+                new UnitSet(UnitSet.Numbers, ParameterSet.NumberBounds),
+                new UnitSet(UnitSet.AllKeyboardSymbols, ParameterSet.SymbolBounds),
+            };
             Password = PasswordGeneratorLegacy.Generate(
                 MasterPassword, Keyword, OptionalKeyword, Modifier,
-                ParameterSet.Length, ParameterSet.UnitSets);
+                ParameterSet.Length, unitSets);
 
             IsBusy = false;
         }

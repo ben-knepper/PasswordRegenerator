@@ -11,10 +11,22 @@
                     ItemsSource="{Binding LengthOptions}"
                     ItemDisplayBinding="{Binding Name}"
                     SelectedItem="{Binding SelectedLength}" />
-            <Picker Title="Lowercase" />
-            <Picker Title="Uppercase" />
-            <Picker Title="Numbers" />
-            <Picker Title="Symbols" />
+            <Picker Title="Lowercase"
+                    ItemsSource="{Binding LowercaseBoundsOptions}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding SelectedLowercaseBounds}" />
+            <Picker Title="Uppercase"
+                    ItemsSource="{Binding UppercaseBoundsOptions}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding SelectedUppercaseBounds}" />
+            <Picker Title="Numbers"
+                    ItemsSource="{Binding NumberBoundsOptions}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding SelectedNumberBounds}" />
+            <Picker Title="Symbols"
+                    ItemsSource="{Binding SymbolBoundsOptions}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding SelectedSymbolBounds}" />
             <Picker Title="Symbol Type" />
             <Button Text="Save" Command="{Binding SaveCommand}"
                     Clicked="SaveButton_Clicked" />

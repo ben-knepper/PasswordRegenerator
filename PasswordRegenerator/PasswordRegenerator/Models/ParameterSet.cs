@@ -10,22 +10,28 @@ namespace PasswordRegenerator.Models
     public class ParameterSet
     {
         public int Length { get; set; }
-        public ObservableCollection<UnitSet> UnitSets { get; set; }
+        public Bounds LowercaseBounds { get; set; }
+        public Bounds UppercaseBounds { get; set; }
+        public Bounds NumberBounds { get; set; }
+        public Bounds SymbolBounds { get; set; }
         public bool IsLegacy { get; set; }
 
         public ParameterSet() { }
-        public ParameterSet(int length, ICollection<UnitSet> unitSets, bool isLegacy)
+        public ParameterSet(int length, Bounds lowercaseBounds, Bounds uppercaseBounds,
+            Bounds numberBounds, Bounds symbolBounds, bool isLegacy)
         {
             Length = length;
-            UnitSets = new ObservableCollection<UnitSet>(unitSets);
+            LowercaseBounds = lowercaseBounds;
+            UppercaseBounds = uppercaseBounds;
+            NumberBounds = numberBounds;
+            SymbolBounds = symbolBounds;
             IsLegacy = isLegacy;
         }
 
         public ParameterSet Copy()
         {
-            var unitSetsCopy = new UnitSet[UnitSets.Count];
-            UnitSets.CopyTo(unitSetsCopy, 0);
-            return new ParameterSet(Length, unitSetsCopy, IsLegacy);
+            return new ParameterSet(Length, LowercaseBounds, UppercaseBounds,
+                NumberBounds, SymbolBounds, IsLegacy);
         }
     }
 }

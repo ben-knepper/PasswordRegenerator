@@ -7,9 +7,13 @@ namespace PasswordGeneration
     public struct Bounds
     {
         /// <summary>
-        /// Zero to all characters (0, Int32.MaxValue).
+        /// Used to designate an unlimited number of units.
         /// </summary>
-        public static readonly Bounds Any = new Bounds(0, Int32.MaxValue);
+        public static readonly int Unlimited = Int32.MaxValue;
+        /// <summary>
+        /// Zero to all characters (0, Unlimited).
+        /// </summary>
+        public static readonly Bounds Any = new Bounds(0, Unlimited);
         /// <summary>
         /// Zero characters (0, 0).
         /// </summary>
@@ -19,9 +23,9 @@ namespace PasswordGeneration
         /// </summary>
         public static readonly Bounds One = new Bounds(1, 1);
         /// <summary>
-        /// At least one character (1, Int32.MaxValue).
+        /// At least one character (1, Unlimited).
         /// </summary>
-        public static readonly Bounds AtLeastOne = new Bounds(1, Int32.MaxValue);
+        public static readonly Bounds AtLeastOne = new Bounds(1, Unlimited);
 
         public int Min { get; set; }
         public int Max { get; set; }

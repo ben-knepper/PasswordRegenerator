@@ -30,27 +30,27 @@ namespace PasswordGeneration
 
             #endregion
 
-            // encrypt primary key
+            // encrypt master password
             byte[] primaryKey = GenerateKey(master);
 
-            // encrypt secondary key and combine with primary
+            // encrypt keyword and combine with master
             byte[] secondaryKey = GenerateKey(keyword);
             primaryKey = CombineKeys(primaryKey, secondaryKey);
 
-            // append the size to the optional key if there is one,
-            // or make the size the optional key if there is not
-            optionalKeyword = optionalKeyword != null ? optionalKeyword + size : size.ToString();
+            // append the size to the modifier if there is one,
+            // or make the size the modifier if there is not
+            modifier = modifier != null ? modifier + size : size.ToString();
 
-            // if there is a sub keyword, encrypt it and combine it with the primary key
+            // if there is an optional keyword, encrypt it and combine it with the primary key
             if (!String.IsNullOrEmpty(optionalKeyword))
             {
                 byte[] subKey = GenerateKey(optionalKeyword);
                 primaryKey = CombineKeys(primaryKey, subKey);
             }
 
-            // encrypt the optional key and combine it with the primary
-            byte[] optionalKey = GenerateKey(optionalKeyword);
-            primaryKey = CombineKeys(primaryKey, optionalKey);
+            // encrypt the modifier key and combine it with the primary
+            byte[] modifierKey = GenerateKey(modifier);
+            primaryKey = CombineKeys(primaryKey, modifierKey);
             
             // encrypt unitListSet and combine with primary key
             byte[] unitListSetKey = GenerateKey(ConvertUnitSetsToString(unitSets));
