@@ -70,9 +70,9 @@ namespace PasswordGeneration
                 // make compatible with legacy format
                 string setString = unitSet.ToString();
                 var setBuilder = new StringBuilder(unitSet.ToString());
-                setBuilder.Replace("}[", "),(", setString.LastIndexOf("}["), 1);
-                setBuilder.Replace("{", "(", 0, 2);
-                setBuilder.Replace("]", ")", setBuilder.Length - 1, 1);
+                setBuilder.Replace("}[", "),(", setString.LastIndexOf("}["), 2);
+                setBuilder.Replace("{", "{(", 0, 2);
+                setBuilder.Replace("]", ")}", setBuilder.Length - 1, 1);
 
                 builder.Append($"{setBuilder}\n");
             }
