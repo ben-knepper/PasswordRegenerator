@@ -12,17 +12,17 @@ namespace PasswordRegenerator.ViewModels
 {
     class GeneratorOptionsViewModel : BaseViewModel
     {
-        private static readonly ReadOnlyCollection<Length> _lengthOptions =
-            new ReadOnlyCollection<Length>(
-                Enumerable.Range(1, 256).Select(x => new Length(x)).ToList()
+        private static readonly ReadOnlyCollection<LengthOption> _lengthOptions =
+            new ReadOnlyCollection<LengthOption>(
+                Enumerable.Range(1, 256).Select(x => new LengthOption(x)).ToList()
             );
         public ParameterSet OriginalParameterSet { get; set; }
         public ParameterSet CurrentParameterSet { get; set; }
 
-        public ReadOnlyCollection<Length> LengthOptions => _lengthOptions;
+        public ReadOnlyCollection<LengthOption> LengthOptions => _lengthOptions;
 
-        private Length _selectedLength;
-        public Length SelectedLength
+        private LengthOption _selectedLength;
+        public LengthOption SelectedLength
         {
             get { return _selectedLength; }
             set
@@ -45,7 +45,7 @@ namespace PasswordRegenerator.ViewModels
             SaveCommand = new Command(ExecuteSaveCommand);
             CancelCommand = new Command(ExecuteCancelCommand);
 
-            SelectedLength = new Length(OriginalParameterSet.Length);
+            SelectedLength = new LengthOption(OriginalParameterSet.Length);
         }
 
         void ExecuteSaveCommand()

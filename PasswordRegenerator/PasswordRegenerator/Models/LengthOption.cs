@@ -4,12 +4,12 @@ using System.Text;
 
 namespace PasswordRegenerator.Models
 {
-    public struct Length
+    public struct LengthOption
     {
         public int Value { get; private set; }
         public string Name => Value.ToString();
 
-        public Length(int value)
+        public LengthOption(int value)
         {
             Value = value;
         }
