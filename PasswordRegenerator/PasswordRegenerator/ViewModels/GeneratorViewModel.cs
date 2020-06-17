@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 
 using PasswordGeneration;
+using PasswordGeneration.Legacy;
 
 using PasswordRegenerator.Models;
 using PasswordRegenerator.Views;

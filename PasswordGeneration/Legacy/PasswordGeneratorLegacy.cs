@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace PasswordGeneration
+namespace PasswordGeneration.Legacy
 {
     public static class PasswordGeneratorLegacy
     {
