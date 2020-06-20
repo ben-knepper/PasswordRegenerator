@@ -58,7 +58,10 @@ namespace PasswordGeneration
             get
             {
                 ulong longValue = _state[i / BytesInLong];
-                return (byte)(longValue >> (BitsInByte * (i % BytesInLong)));
+                unchecked
+                {
+                    return (byte)(longValue >> (BitsInByte * (i % BytesInLong)));
+                }
             }
             set
             {
@@ -81,24 +84,50 @@ namespace PasswordGeneration
 
         public byte NextByte()
         {
-            byte result = this[0];
+            byte random = this[0];
 
             RunKeccak();
 
-            return result;
+            return random;
         }
         public int NextInt()
         {
-            int result = 0;
-            for (int i = 0; i < BytesInInt; ++i)
+            int random;
+            unchecked
             {
-                result <<= BitsInByte;
-                result |= this[i];
+                random = (int)(this[0, 0] >> BitsInLong / 2);
             }
 
             RunKeccak();
 
-            return result;
+            return random;
+        }
+        public uint NextUInt()
+        {
+            uint random;
+            unchecked
+            {
+                random = (uint)(this[0, 0] >> BitsInLong / 2);
+            }
+
+            RunKeccak();
+
+            return random;
+        }
+        public int NextInt(int min, int max)
+        {
+            uint range = (uint)((long)max - (long)min);
+            uint maxUnbiased = (UInt32.MaxValue / range) * range - 1;
+
+            uint random;
+            do
+                random = NextUInt();
+            while (random > maxUnbiased);
+
+            unchecked
+            {
+                return (int)(min + (random % range));
+            }
         }
 
         private void AbsorbInput(string input)
