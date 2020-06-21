@@ -31,10 +31,7 @@ namespace PasswordGeneration
             Bounds = bounds;
         }
 
-        public static implicit operator List<string>(UnitSet unitSet)
-        {
-            return unitSet.ToList();
-        }
+        public static implicit operator List<string>(UnitSet unitSet) => unitSet.ToList();
         
         public override string ToString()
         {

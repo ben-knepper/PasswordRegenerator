@@ -56,7 +56,7 @@ namespace PasswordRegenerator.ViewModels
                 UppercaseBounds = Bounds.AtLeastOne,
                 NumberBounds = Bounds.AtLeastOne,
                 SymbolBounds = Bounds.AtLeastOne,
-                IsLegacy = true,
+                IsLegacy = false,
             };
         }
 
@@ -71,11 +71,28 @@ namespace PasswordRegenerator.ViewModels
                 new UnitSet(UnitSet.Numbers, ParameterSet.NumberBounds),
                 new UnitSet(UnitSet.AllKeyboardSymbols, ParameterSet.SymbolBounds),
             };
-            Password = PasswordGeneratorLegacy.Generate(
-                MasterPassword, Keyword, OptionalKeyword, Modifier,
-                ParameterSet.Length, unitSets);
+
+            if (ParameterSet.IsLegacy)
+            {
+                Password = PasswordGeneratorLegacy.Generate(
+                    MasterPassword, Keyword, OptionalKeyword, Modifier,
+                    ParameterSet.Length, unitSets);
+            }
+            else
+            {
+                var generator = new PasswordGenerator()
+                {
+                    MasterPassword = MasterPassword,
+                    Keyword = Keyword + "\n" + OptionalKeyword,
+                    Modifier = Modifier,
+                    Length = ParameterSet.Length,
+                    UnitSets = unitSets
+                };
+                Password = generator.Generate();
+            }
 
             IsBusy = false;
+
         }
     }
 }
