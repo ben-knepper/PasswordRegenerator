@@ -6,6 +6,14 @@
              mc:Ignorable="d"
              x:Class="PasswordRegenerator.Views.GeneratorOptionsPage">
     <StackLayout Padding="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Text="Legacy Generation" VerticalTextAlignment="Center" />
+            <Switch Grid.Column="1" IsToggled="{Binding CurrentParameterSet.IsLegacy}" />
+        </Grid>
         <Picker x:Name="LengthPicker" Title="Length"
                 ItemsSource="{Binding LengthOptions}"
                 ItemDisplayBinding="{Binding Name}"
