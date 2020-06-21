@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
@@ -129,30 +130,30 @@ namespace PasswordGeneration
                 return (int)(min + (random % range));
             }
         }
+        public int NextInt(int max) => NextInt(0, max);
 
         private void AbsorbInput(string input)
         {
-            int byteCount = Encoding.UTF8.GetByteCount(input);
-            int blockCount = byteCount / BlockSize + 1;
+            // Get the input bytes, padded to fit evenly in longs
+            var byteCount = Encoding.Unicode.GetByteCount(input);
+            var byteInput = new byte[byteCount + (BytesInLong - byteCount % BytesInLong)];
+            Encoding.Unicode.GetBytes(input, 0, input.Length, byteInput, 0);
 
-            int remainingBytes = byteCount;
+            int blockCount = byteInput.Length / BlockSize + 1;
+            int byteIndex = 0;
             for (int blockIndex = 0; blockIndex < blockCount; ++blockIndex)
             {
-                byte[] bytes = new byte[BlockSize];
-                Encoding.UTF8.GetBytes(input, blockIndex * BlockSize,
-                    remainingBytes < BlockSize ? remainingBytes : BlockSize, bytes, 0);
-
                 for (int longIndex = 0; longIndex < LaneDimension * LaneDimension; ++longIndex)
                 {
                     ulong l = 0;
-                    for (int byteIndex = 0; byteIndex < BytesInLong; ++byteIndex, --remainingBytes)
+                    for (int i = 0; i < BytesInLong; ++i, ++byteIndex)
                     {
                         l <<= BitsInByte;
-                        l |= bytes[blockIndex * BlockSize + longIndex * BytesInLong + byteIndex];
+                        l |= byteInput[byteIndex];
                     }
                     _state[longIndex] ^= l;
 
-                    if (remainingBytes <= 0)
+                    if (byteIndex >= byteCount)
                         break;
                 }
 
