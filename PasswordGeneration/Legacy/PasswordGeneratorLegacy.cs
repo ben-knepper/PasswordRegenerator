@@ -11,7 +11,7 @@ namespace PasswordGeneration.Legacy
         static readonly SHA1 sha1 = SHA1.Create();
 
         public static string Generate(string master, string keyword, string optionalKeyword,
-            string modifier, int size, IList<UnitSet> unitSets)
+            string modifier, int size, IList<UnitSelection> unitSets)
         {
             #region Argument Validation
 
@@ -62,7 +62,7 @@ namespace PasswordGeneration.Legacy
             // generate and return the password
             return GeneratePassword(primaryKey, format);
         }
-        private static string ConvertUnitSetsToString(IList<UnitSet> unitSets)
+        private static string ConvertUnitSetsToString(IList<UnitSelection> unitSets)
         {
             var builder = new StringBuilder();
             foreach (var unitSet in unitSets)
@@ -121,7 +121,7 @@ namespace PasswordGeneration.Legacy
             // return
             return output;
         }
-        private static List<string>[] GenerateFormat(byte[] key, IList<UnitSet> unitSets, int size)
+        private static List<string>[] GenerateFormat(byte[] key, IList<UnitSelection> unitSets, int size)
         {
             #region Argument Validation
             

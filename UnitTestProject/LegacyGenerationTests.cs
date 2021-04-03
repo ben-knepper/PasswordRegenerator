@@ -5,6 +5,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PasswordGeneration;
 using PasswordGeneration.Legacy;
 
+using PasswordRegenerator.Models;
+
 namespace UnitTestProject
 {
     [TestClass]
@@ -18,12 +20,12 @@ namespace UnitTestProject
             string optionalKeyword = null;
             string modifier = null;
             int length = 10;
-            var unitSets = new List<UnitSet>()
+            var unitSets = new List<UnitSelection>()
             {
-                new UnitSet(UnitSet.LowercaseLetters, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.UppercaseLetters, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.Numbers, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.AllKeyboardSymbols, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Lowercase, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Uppercase, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Numbers, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.CompleteSymbols, Bounds.AtLeastOne),
             };
 
             string result = PasswordGeneratorLegacy.Generate(
@@ -39,12 +41,12 @@ namespace UnitTestProject
             string optionalKeyword = "b";
             string modifier = null;
             int length = 10;
-            var unitSets = new List<UnitSet>()
+            var unitSets = new List<UnitSelection>()
             {
-                new UnitSet(UnitSet.LowercaseLetters, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.UppercaseLetters, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.Numbers, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.AllKeyboardSymbols, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Lowercase, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Uppercase, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Numbers, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.CompleteSymbols, Bounds.AtLeastOne),
             };
 
             string result = PasswordGeneratorLegacy.Generate(
@@ -60,12 +62,12 @@ namespace UnitTestProject
             string optionalKeyword = null;
             string modifier = "c";
             int length = 10;
-            var unitSets = new List<UnitSet>()
+            var unitSets = new List<UnitSelection>()
             {
-                new UnitSet(UnitSet.LowercaseLetters, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.UppercaseLetters, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.Numbers, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.AllKeyboardSymbols, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Lowercase, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Uppercase, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Numbers, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.CompleteSymbols, Bounds.AtLeastOne),
             };
 
             string result = PasswordGeneratorLegacy.Generate(
@@ -81,12 +83,12 @@ namespace UnitTestProject
             string optionalKeyword = null;
             string modifier = null;
             int length = 11;
-            var unitSets = new List<UnitSet>()
+            var unitSets = new List<UnitSelection>()
             {
-                new UnitSet(UnitSet.LowercaseLetters, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.UppercaseLetters, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.Numbers, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.AllKeyboardSymbols, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Lowercase, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Uppercase, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.Numbers, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.CompleteSymbols, Bounds.AtLeastOne),
             };
 
             string result = PasswordGeneratorLegacy.Generate(
@@ -102,12 +104,12 @@ namespace UnitTestProject
             string optionalKeyword = null;
             string modifier = null;
             int length = 10;
-            var unitSets = new List<UnitSet>()
+            var unitSets = new List<UnitSelection>()
             {
-                new UnitSet(UnitSet.LowercaseLetters, Bounds.None),
-                new UnitSet(UnitSet.UppercaseLetters, Bounds.One),
-                new UnitSet(UnitSet.Numbers, Bounds.AtLeastOne),
-                new UnitSet(UnitSet.AllKeyboardSymbols, Bounds.Any),
+                new UnitSelection(PasswordUnitSet.Lowercase, Bounds.None),
+                new UnitSelection(PasswordUnitSet.Uppercase, Bounds.One),
+                new UnitSelection(PasswordUnitSet.Numbers, Bounds.AtLeastOne),
+                new UnitSelection(PasswordUnitSet.CompleteSymbols, Bounds.Any),
             };
 
             string result = PasswordGeneratorLegacy.Generate(

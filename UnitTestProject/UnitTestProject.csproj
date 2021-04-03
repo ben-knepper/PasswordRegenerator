@@ -60,6 +60,10 @@
       <Project>{a06f16bd-5ba7-4c8a-8a54-753112250ecb}</Project>
       <Name>PasswordGeneration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PasswordRegenerator\PasswordRegenerator\PasswordRegenerator.csproj">
+      <Project>{14a950b4-a940-4d34-a3c1-ee01fa47e3e8}</Project>
+      <Name>PasswordRegenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

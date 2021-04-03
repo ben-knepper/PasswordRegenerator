@@ -16,24 +16,36 @@ namespace PasswordRegenerator.ViewModels
             new ReadOnlyCollection<LengthOption>(
                 Enumerable.Range(1, 256).Select(x => new LengthOption(x)).ToList()
             );
-        private static readonly ReadOnlyCollection<BoundsOption> _boundsOptions =
-            new ReadOnlyCollection<BoundsOption>(new List<BoundsOption>()
+        private static readonly ReadOnlyCollection<NamedOption<Bounds>> _boundsOptions =
+            new ReadOnlyCollection<NamedOption<Bounds>>(new List<NamedOption<Bounds>>()
+                {
+                    new NamedOption<Bounds>(Bounds.None,       "None"),
+                    new NamedOption<Bounds>(Bounds.One,        "One"),
+                    new NamedOption<Bounds>(Bounds.AtLeastOne, "At least one"),
+                    new NamedOption<Bounds>(Bounds.Any,        "Any number"),
+                });
+        private static readonly ReadOnlyCollection<NamedOption<IList<string>>> _symbolSetOptions =
+            new ReadOnlyCollection<NamedOption<IList<string>>>(new List<NamedOption<IList<string>>>()
             {
-                new BoundsOption(Bounds.None, "None"),
-                new BoundsOption(Bounds.One, "One"),
-                new BoundsOption(Bounds.AtLeastOne, "At least one"),
-                new BoundsOption(Bounds.Any, "Any number"),
-            }
-        );
+                new NamedOption<IList<string>>(PasswordUnitSet.SimpleSymbols, "Common"),
+                new NamedOption<IList<string>>(PasswordUnitSet.CompleteSymbols, "Complete"),
+                new NamedOption<IList<string>>(null, "Custom"),
+            });
+
+        private PasswordUnitSelection LowercaseSelection => CurrentParameterSet["lowercase"];
+        private PasswordUnitSelection UppercaseSelection => CurrentParameterSet["uppercase"];
+        private PasswordUnitSelection NumberSelection    => CurrentParameterSet["numbers"];
+        private PasswordUnitSelection SymbolSelection    => CurrentParameterSet.FirstStartingWith("symbols");
 
         public ParameterSet OriginalParameterSet { get; set; }
         public ParameterSet CurrentParameterSet { get; set; }
 
-        public ReadOnlyCollection<LengthOption> LengthOptions          => _lengthOptions;
-        public ReadOnlyCollection<BoundsOption> LowercaseBoundsOptions => _boundsOptions;
-        public ReadOnlyCollection<BoundsOption> UppercaseBoundsOptions => _boundsOptions;
-        public ReadOnlyCollection<BoundsOption> NumberBoundsOptions    => _boundsOptions;
-        public ReadOnlyCollection<BoundsOption> SymbolBoundsOptions    => _boundsOptions;
+        public ReadOnlyCollection<LengthOption>               LengthOptions          => _lengthOptions;
+        public ReadOnlyCollection<NamedOption<Bounds>>        LowercaseBoundsOptions => _boundsOptions;
+        public ReadOnlyCollection<NamedOption<Bounds>>        UppercaseBoundsOptions => _boundsOptions;
+        public ReadOnlyCollection<NamedOption<Bounds>>        NumberBoundsOptions    => _boundsOptions;
+        public ReadOnlyCollection<NamedOption<Bounds>>        SymbolBoundsOptions    => _boundsOptions;
+        public ReadOnlyCollection<NamedOption<IList<string>>> SymbolSetOptions       => _symbolSetOptions;
 
         private LengthOption _selectedLength;
         public LengthOption SelectedLength
@@ -45,46 +57,71 @@ namespace PasswordRegenerator.ViewModels
                 CurrentParameterSet.Length = _selectedLength.Value;
             }
         }
-        private BoundsOption _selectedLowercaseBounds;
-        public BoundsOption SelectedLowercaseBounds
+        private NamedOption<Bounds> _selectedLowercaseBounds;
+        public NamedOption<Bounds> SelectedLowercaseBounds
         {
             get { return _selectedLowercaseBounds; }
             set
             {
                 _selectedLowercaseBounds = value;
-                CurrentParameterSet.LowercaseBounds = _selectedLowercaseBounds.Value;
+                LowercaseSelection.Bounds = _selectedLowercaseBounds.Value;
             }
         }
-        private BoundsOption _selectedUppercaseBounds;
-        public BoundsOption SelectedUppercaseBounds
+        private NamedOption<Bounds> _selectedUppercaseBounds;
+        public NamedOption<Bounds> SelectedUppercaseBounds
         {
             get { return _selectedUppercaseBounds; }
             set
             {
                 _selectedUppercaseBounds = value;
-                CurrentParameterSet.UppercaseBounds = _selectedUppercaseBounds.Value;
+                UppercaseSelection.Bounds = _selectedUppercaseBounds.Value;
             }
         }
-        private BoundsOption _selectedNumberBounds;
-        public BoundsOption SelectedNumberBounds
+        private NamedOption<Bounds> _selectedNumberBounds;
+        public NamedOption<Bounds> SelectedNumberBounds
         {
             get { return _selectedNumberBounds; }
             set
             {
                 _selectedNumberBounds = value;
-                CurrentParameterSet.NumberBounds = _selectedNumberBounds.Value;
+                NumberSelection.Bounds = _selectedNumberBounds.Value;
             }
         }
-        private BoundsOption _selectedSymbolBounds;
-        public BoundsOption SelectedSymbolBounds
+        private NamedOption<Bounds> _selectedSymbolBounds;
+        public NamedOption<Bounds> SelectedSymbolBounds
         {
             get { return _selectedSymbolBounds; }
             set
             {
                 _selectedSymbolBounds = value;
-                CurrentParameterSet.SymbolBounds = _selectedSymbolBounds.Value;
+                SymbolSelection.Bounds = _selectedSymbolBounds.Value;
             }
         }
+        private NamedOption<IList<string>> _selectedSymbolSet;
+        public NamedOption<IList<string>> SelectedSymbolSet
+        {
+            get { return _selectedSymbolSet; }
+            set
+            {
+                _selectedSymbolSet = value;
+                SymbolSelection.UnitSet = _selectedSymbolSet?.Value as PasswordUnitSet ?? CustomSymbolSet;
+            }
+        }
+        private string _customSymbolSetString;
+        public string CustomSymbolSetString
+        {
+            get { return _customSymbolSetString; }
+            set
+            {
+                _customSymbolSetString = value;
+                if (SelectedSymbolSet.Value is null)
+                    SymbolSelection.UnitSet = CustomSymbolSet;
+            }
+        }
+
+        private PasswordUnitSet CustomSymbolSet
+            => new PasswordUnitSet("symbols,custom", "Custom Symbols",
+                ConvertStringToList(CustomSymbolSetString));
 
         public Command SaveCommand { get; private set; }
         public Command CancelCommand { get; private set; }
@@ -99,16 +136,7 @@ namespace PasswordRegenerator.ViewModels
             SaveCommand   = new Command(ExecuteSaveCommand);
             CancelCommand = new Command(ExecuteCancelCommand);
 
-            SelectedLength = _lengthOptions.First(
-                option => option.Value == OriginalParameterSet.Length);
-            SelectedLowercaseBounds = _boundsOptions.First(
-                option => option.Value == OriginalParameterSet.LowercaseBounds);
-            SelectedUppercaseBounds = _boundsOptions.First(
-                option => option.Value == OriginalParameterSet.UppercaseBounds);
-            SelectedNumberBounds = _boundsOptions.First(
-                option => option.Value == OriginalParameterSet.NumberBounds);
-            SelectedSymbolBounds = _boundsOptions.First(
-                option => option.Value == OriginalParameterSet.SymbolBounds);
+            SetSelectedItems();
         }
 
         void ExecuteSaveCommand()
@@ -117,12 +145,43 @@ namespace PasswordRegenerator.ViewModels
         }
         void ExecuteCancelCommand()
         {
-            CurrentParameterSet.Length          = OriginalParameterSet.Length;
-            CurrentParameterSet.LowercaseBounds = OriginalParameterSet.LowercaseBounds;
-            CurrentParameterSet.UppercaseBounds = OriginalParameterSet.UppercaseBounds;
-            CurrentParameterSet.NumberBounds    = OriginalParameterSet.NumberBounds;
-            CurrentParameterSet.SymbolBounds    = OriginalParameterSet.SymbolBounds;
-            CurrentParameterSet.IsLegacy        = OriginalParameterSet.IsLegacy;
+            ResetParameters();
         }
+
+        private void SetSelectedItems()
+        {
+            SelectedLength = _lengthOptions.First(
+                option => option.Value == CurrentParameterSet.Length);
+            SelectedLowercaseBounds = _boundsOptions.First(
+                option => option.Value == LowercaseSelection.Bounds);
+            SelectedUppercaseBounds = _boundsOptions.First(
+                option => option.Value == UppercaseSelection.Bounds);
+            SelectedNumberBounds = _boundsOptions.First(
+                option => option.Value == NumberSelection.Bounds);
+            SelectedSymbolBounds = _boundsOptions.First(
+                option => option.Value == SymbolSelection.Bounds);
+            SelectedSymbolSet = _symbolSetOptions.FirstOrDefault(
+                option => option.Value == SymbolSelection.UnitSet);
+            if (SelectedSymbolSet is null)
+            {
+                SelectedSymbolSet = _symbolSetOptions.Last(o => o.Name == "Custom");
+                CustomSymbolSetString = ConvertListToString(SymbolSelection.UnitSet);
+            }
+        }
+        private void ResetParameters()
+        {
+            CurrentParameterSet.Length   = OriginalParameterSet.Length;
+            LowercaseSelection.Bounds    = OriginalParameterSet["lowercase"].Bounds;
+            UppercaseSelection.Bounds    = OriginalParameterSet["uppercase"].Bounds;
+            NumberSelection.Bounds       = OriginalParameterSet["numbers"].Bounds;
+            SymbolSelection.Bounds       = OriginalParameterSet.FirstStartingWith("symbols").Bounds;
+            SymbolSelection.UnitSet      = OriginalParameterSet.FirstStartingWith("symbols").UnitSet;
+            CurrentParameterSet.IsLegacy = OriginalParameterSet.IsLegacy;
+        }
+
+        private static List<string> ConvertStringToList(string s)
+            => s?.Select(c => c.ToString())?.ToList();
+        private static string ConvertListToString(IList<string> list)
+            => list.Aggregate((current, next) => current + next);
     }
 }

@@ -13,7 +13,7 @@ namespace PasswordGeneration
         public string Keyword { get; set; }
         public string Modifier { get; set; }
         public int Length { get; set; }
-        public IList<UnitSet> UnitSets { get; set; }
+        public IList<UnitSelection> UnitSets { get; set; }
 
         public PasswordGenerator() { }
 
@@ -40,9 +40,9 @@ namespace PasswordGeneration
             builder.Append(Delimiter);
         }
 
-        private List<UnitSet> GenerateFormat()
+        private List<UnitSelection> GenerateFormat()
         {
-            var format = new List<UnitSet>();
+            var format = new List<UnitSelection>();
 
             foreach (var unitSet in UnitSets)
                 for (int i = 0; i < unitSet.Bounds.Min; ++i)

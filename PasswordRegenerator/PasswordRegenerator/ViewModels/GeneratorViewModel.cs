@@ -11,6 +11,7 @@ using PasswordGeneration.Legacy;
 
 using PasswordRegenerator.Models;
 using PasswordRegenerator.Views;
+using System.Linq;
 
 namespace PasswordRegenerator.ViewModels
 {
@@ -36,47 +37,30 @@ namespace PasswordRegenerator.ViewModels
             Title = "Generate";
             GenerateCommand = new Command(async () => await Task.Run(ExecuteGenerateCommand));
 
-            var symbols = new UnitSet(UnitSet.AllKeyboardSymbols, Bounds.AtLeastOne);
-
-            var unitSets = new List<UnitSet>()
+            var unitSets = new List<PasswordUnitSelection>()
             {
-                new UnitSet(UnitSet.LowercaseLetters,
-                    Bounds.AtLeastOne),
-                new UnitSet(UnitSet.UppercaseLetters,
-                    Bounds.AtLeastOne),
-                new UnitSet(UnitSet.Numbers,
-                    Bounds.AtLeastOne),
-                symbols
+                new PasswordUnitSelection(PasswordUnitSet.Lowercase,       Bounds.AtLeastOne),
+                new PasswordUnitSelection(PasswordUnitSet.Uppercase,       Bounds.AtLeastOne),
+                new PasswordUnitSelection(PasswordUnitSet.Numbers,         Bounds.AtLeastOne),
+                new PasswordUnitSelection(PasswordUnitSet.CompleteSymbols, Bounds.AtLeastOne),
             };
 
-            ParameterSet = new ParameterSet()
-            {
-                Length = 10,
-                LowercaseBounds = Bounds.AtLeastOne,
-                UppercaseBounds = Bounds.AtLeastOne,
-                NumberBounds = Bounds.AtLeastOne,
-                SymbolBounds = Bounds.AtLeastOne,
-                IsLegacy = false,
-            };
+            ParameterSet = new ParameterSet(10, unitSets, false);
         }
 
         void ExecuteGenerateCommand()
         {
             IsBusy = true;
 
-            var unitSets = new List<UnitSet>()
-            {
-                new UnitSet(UnitSet.LowercaseLetters, ParameterSet.LowercaseBounds),
-                new UnitSet(UnitSet.UppercaseLetters, ParameterSet.UppercaseBounds),
-                new UnitSet(UnitSet.Numbers, ParameterSet.NumberBounds),
-                new UnitSet(UnitSet.AllKeyboardSymbols, ParameterSet.SymbolBounds),
-            };
+            var unitSelections = ParameterSet.UnitSelections
+                .Select(pus => new UnitSelection(pus.UnitSet, pus.Bounds))
+                .ToList();
 
             if (ParameterSet.IsLegacy)
             {
                 Password = PasswordGeneratorLegacy.Generate(
                     MasterPassword, Keyword, OptionalKeyword, Modifier,
-                    ParameterSet.Length, unitSets);
+                    ParameterSet.Length, unitSelections);
             }
             else
             {
@@ -86,7 +70,7 @@ namespace PasswordRegenerator.ViewModels
                     Keyword = Keyword + "\n" + OptionalKeyword,
                     Modifier = Modifier,
                     Length = ParameterSet.Length,
-                    UnitSets = unitSets
+                    UnitSets = unitSelections
                 };
                 Password = generator.Generate();
             }

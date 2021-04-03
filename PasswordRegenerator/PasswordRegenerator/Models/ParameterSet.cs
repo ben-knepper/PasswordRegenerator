@@ -1,37 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-
-using PasswordGeneration;
+using System.Linq;
 
 namespace PasswordRegenerator.Models
 {
     public class ParameterSet
     {
         public int Length { get; set; }
-        public Bounds LowercaseBounds { get; set; }
-        public Bounds UppercaseBounds { get; set; }
-        public Bounds NumberBounds { get; set; }
-        public Bounds SymbolBounds { get; set; }
+        public ObservableCollection<PasswordUnitSelection> UnitSelections { get; set; }
         public bool IsLegacy { get; set; }
 
+        public PasswordUnitSelection this[string id] => UnitSelections.FirstOrDefault(us => us.ID.Equals(id));
+
         public ParameterSet() { }
-        public ParameterSet(int length, Bounds lowercaseBounds, Bounds uppercaseBounds,
-            Bounds numberBounds, Bounds symbolBounds, bool isLegacy)
+        public ParameterSet(int length, IList<PasswordUnitSelection> unitSets)
+            : this(length, unitSets, false) { }
+        public ParameterSet(int length, IList<PasswordUnitSelection> unitSets, bool isLegacy)
         {
             Length = length;
-            LowercaseBounds = lowercaseBounds;
-            UppercaseBounds = uppercaseBounds;
-            NumberBounds = numberBounds;
-            SymbolBounds = symbolBounds;
+            UnitSelections = new ObservableCollection<PasswordUnitSelection>(unitSets);
             IsLegacy = isLegacy;
         }
 
+        public PasswordUnitSelection FirstStartingWith(string substring) => UnitSelections.First(us => us.ID.StartsWith(substring));
+
+        /// <summary>
+        /// Deep copies the parameter set.
+        /// </summary>
+        /// <returns>A deep copy of the parameter set.</returns>
         public ParameterSet Copy()
         {
-            return new ParameterSet(Length, LowercaseBounds, UppercaseBounds,
-                NumberBounds, SymbolBounds, IsLegacy);
+            var newUnitSets = new ObservableCollection<PasswordUnitSelection>(
+                UnitSelections.Select(us => new PasswordUnitSelection(us.UnitSet, us.Bounds)));
+            return new ParameterSet(Length, newUnitSets, IsLegacy);
         }
     }
 }
